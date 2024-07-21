@@ -79,7 +79,7 @@ const loginDoctor = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Login successful!", token, fullname: doctor.fullname });
+      .json({ message: "Login successful!", token, username: doctor.fullname });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while logging in" });
@@ -170,18 +170,7 @@ const deleteDoctor = async (req, res) => {
       .json({ error: "An error occurred while deleting the Doctor" });
   }
 };
-// Get Specialists
-const getSpecialists = async (req, res) => {
-  try {
-    const specialists = await Doctor.distinct("specialist");
-    res.status(200).json(specialists);
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while retrieving specialists." });
-  }
-};
+
 export {
   registerDoctor,
   loginDoctor,
@@ -189,5 +178,4 @@ export {
   getDoctorById,
   updateDoctor,
   deleteDoctor,
-  getSpecialists,
 };

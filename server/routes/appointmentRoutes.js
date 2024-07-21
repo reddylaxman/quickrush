@@ -10,9 +10,6 @@ const router = express.Router();
 // Create Appointment
 router.post("/", addAppointment);
 
-// Get Specialists
-router.get("/specialists", getSpecialists);
-
 // Get Appointments
 router.get("/", getAppointments);
 

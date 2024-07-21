@@ -6,7 +6,6 @@ import {
   getAllDoctors,
   updateDoctor,
   deleteDoctor,
-  getSpecialists,
 } from "../controllers/doctorController.js";
 
 const router = express.Router();
@@ -22,9 +21,6 @@ router.get("/:id", getDoctorById);
 
 // Get all Doctors
 router.get("/", getAllDoctors);
-
-// Get Specialists
-router.get("/specialists", getSpecialists);
 
 // Update Doctor
 router.put("/:id", updateDoctor);

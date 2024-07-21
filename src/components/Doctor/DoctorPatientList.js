@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import "./DoctorPatientList.css"; // Import the CSS file
 

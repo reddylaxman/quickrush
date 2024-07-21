@@ -57,7 +57,7 @@ const loginAdmin = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Login successful!", token, fullname: admin.fullname });
+      .json({ message: "Login successful!", token, username: admin.fullname });
   } catch (error) {
     console.error("Error:", error.message);
     res

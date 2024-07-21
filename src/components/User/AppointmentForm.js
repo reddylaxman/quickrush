@@ -9,9 +9,9 @@ const AppointmentForm = () => {
   const [gender, setGender] = useState("");
   const [specialist, setSpecialist] = useState("");
   const [doctor, setDoctor] = useState("");
+  const checked = "false";
   const [appointment_date, setAppointment_date] = useState("");
   const [appointment_time, setAppointment_time] = useState("");
-  const checked = "false";
   const [doctors, setDoctors] = useState([]);
   const [specialists, setSpecialists] = useState([]);
   const [loadingDoctors, setLoadingDoctors] = useState(true);
@@ -37,28 +37,18 @@ const AppointmentForm = () => {
       .then((data) => {
         setDoctors(data);
         setLoadingDoctors(false);
+
+        // Extract specialists from the doctors list
+        const uniqueSpecialists = [
+          ...new Set(data.map((doc) => doc.specialist)),
+        ];
+        setSpecialists(uniqueSpecialists);
+        setLoadingSpecialists(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Failed to fetch doctors. Please try again.");
         setLoadingDoctors(false);
-      });
-
-    // Fetch list of specialists
-    fetch(`${process.env.REACT_APP_VERCEL_URL}/api/doctors`)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
-      .then((data) => {
-        setSpecialists(data);
-        setLoadingSpecialists(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Failed to fetch specialists. Please try again.");
         setLoadingSpecialists(false);
       });
   }, [location]);
@@ -75,9 +65,9 @@ const AppointmentForm = () => {
           gender,
           specialist,
           doctor,
+          checked,
           appointment_date,
           appointment_time,
-          checked,
         }),
       })
         .then((res) => {
@@ -99,21 +89,10 @@ const AppointmentForm = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          console.log("Data being sent:", {
-            patientname,
-            age,
-            gender,
-            specialist,
-            doctor,
-            appointment_date,
-            appointment_time,
-            checked,
-          });
           toast.error("Booking Appointment failed. Please try again.");
         });
     } catch (error) {
       console.error("Error:", error);
-
       toast.error("Booking Appointment failed. Please try again.");
     }
   }
