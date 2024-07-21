@@ -1,0 +1,10 @@
+/* CSS */
+.radio-group input[type="radio"] {
+  transform: scale(0.8);
+  margin-right: 5px;
+  width: 25px;
+  height: 25px;
+}
+.title {
+  text-align: "center";
+}

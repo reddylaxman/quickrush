@@ -1,0 +1,10 @@
+.doctor-image {
+  width: 200px;
+  height: 200px;
+}
+
+.center {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}

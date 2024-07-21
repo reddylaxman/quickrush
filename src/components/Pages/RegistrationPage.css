@@ -1,0 +1,29 @@
+.register-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+TextField {
+  height: "50px";
+}
+.toast-container {
+  .Toastify__toast {
+    font-family: Arial, sans-serif;
+  }
+
+  .Toastify__toast--success {
+    background-color: #5cb85c;
+  }
+
+  .Toastify__toast--error {
+    background: #d9534f;
+  }
+
+  .Toastify__close-button {
+    color: #fff;
+  }
+}

@@ -1,0 +1,12 @@
+.card {
+  border: 1px solid #ced4da; /* Apply a border */
+  border-radius: 8px; /* Add border radius */
+}
+
+.card-title {
+  font-weight: bold; /* Make the title bold */
+}
+
+.card-text {
+  color: #6c757d; /* Set text color */
+}

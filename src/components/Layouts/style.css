@@ -1,0 +1,11 @@
+.navbar {
+  height: 70px;
+  width: auto;
+}
+.logo {
+  font-size: 50px;
+}
+.imgStyle {
+  width: 2rem;
+  border-radius: 50%;
+}
