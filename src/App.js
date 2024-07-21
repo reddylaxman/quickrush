@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <div>
-      <BrowserRouter>
+      <BrowserRouter basename="quickrush">
         <div>
           {role === "null" && <DefaultNavbar setRole={setRole} />}
           {role === "admin" && (
