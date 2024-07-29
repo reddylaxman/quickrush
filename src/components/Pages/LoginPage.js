@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import illustration from "../images/7317079.jpg";
 import open from "../images/eye.png";
 import close from "../images/eye-crossed.png";
+
 function Login({ setRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +29,9 @@ function Login({ setRole }) {
         body: JSON.stringify({ email, password }),
       });
 
-      console.log("Response status:", response.status);
       const data = await response.json();
+
+      console.log("Response status:", response.status);
       console.log("Response data:", data);
 
       if (!response.ok) {
@@ -40,11 +42,14 @@ function Login({ setRole }) {
           );
         } else if (response.status === 401) {
           toast.error(data.error || "Invalid credentials");
+        } else if (response.status === 403) {
+          toast.error(data.error || "Account not verified");
         } else {
           toast.error("An error occurred while logging in");
         }
       } else {
         localStorage.setItem("username", data.username);
+        localStorage.setItem("id", data.id);
         localStorage.setItem("role", role);
         toast.success("You logged in successfully");
         setRole(role);
@@ -154,12 +159,12 @@ function Login({ setRole }) {
 
             <button
               type="submit"
-              className="w-full bg-green-500 text-white p-2 rounded mt-4"
+              className="w-full bg-blue-400 text-white p-2 rounded mt-4"
             >
               Login
             </button>
             <Link
-              to="/UserRegister"
+              to="/Register"
               className="block text-center text-blue-500 mt-4"
             >
               User Register only

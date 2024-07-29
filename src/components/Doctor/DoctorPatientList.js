@@ -118,7 +118,7 @@ const DoctorPatientList = () => {
             ) : (
               <table className="table-auto w-full border-collapse border border-gray-400">
                 <thead>
-                  <tr className="bg-gray-200 text-gray-700">
+                  <tr className="bg-blue-200 text-black-700">
                     {headings.map((h) => (
                       <th key={h} className="px-4 py-2">
                         {h}
@@ -131,24 +131,24 @@ const DoctorPatientList = () => {
                     <tr
                       key={index}
                       className={`${
-                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                      } hover:bg-gray-200 text-gray-700`}
+                        index % 2 === 0 ? "bg-blue-100" : "bg-white"
+                      } hover:text-gray-700`}
                     >
                       <td className="px-4 py-2">{patient.patientname}</td>
                       <td className="px-4 py-2">{patient.age}</td>
                       <td className="px-4 py-2">{patient.gender}</td>
                       <td className="px-4 py-2">{patient.appointment_date}</td>
                       <td className="px-4 py-2">{patient.appointment_time}</td>
+                      <td className="px-4 py-2">{patient.appointment_time}</td>
                       <td className="px-4 py-2">
-                        {!patient.checked ? (
-                          <Form.Check
-                            type="checkbox"
-                            checked={patient.checked}
-                            onChange={() => handleCheck(patient._id)}
-                          />
-                        ) : (
-                          <span className="text-green-500">Checked</span>
-                        )}
+                        <input
+                          type="checkbox"
+                          checked={patient.checked}
+                          onChange={() => handleCheck(patient._id)}
+                          className={`cursor-pointer ${
+                            patient.checked ? "text-green-500" : ""
+                          }`}
+                        />
                       </td>
                     </tr>
                   ))}

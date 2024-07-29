@@ -51,17 +51,17 @@ function FindDoctor() {
         type="text"
         placeholder="Search for doctor"
         className="mb-4 p-2 border border-gray-300 rounded"
-        style={{ width: "20rem" }}
+        style={{ width: "80%" }}
         onChange={filterBySearch}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredList.map((doctor, index) => (
           <div key={index} className="col">
-            <div className="max-w-sm rounded overflow-hidden shadow-lg">
+            <div className="doctor-card">
               <img
-                className="w-full"
-                src={doctor.photo || "default_photo_url_here"}
+                className="doctor-image"
+                src={doctor.img || "default_photo_url_here"}
                 alt="Doctor"
               />
               <div className="px-6 py-4">

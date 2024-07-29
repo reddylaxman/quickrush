@@ -10,6 +10,7 @@ const ViewPatientList = () => {
     "Gender",
     "Appointment Date",
     "Appointment Time",
+    "Doctor",
     "Checked",
   ];
 
@@ -57,8 +58,8 @@ const ViewPatientList = () => {
     message = details.length === 0 ? "No appointments for selected date" : "";
   }
   return (
-    <div className="w-3/5 mx-auto">
-      <div className="bg-white shadow-md rounded-lg p-6">
+    <div className="w-4/5 mx-auto mt-5">
+      <div className="container shadow-md rounded-lg p-6">
         <div className="flex justify-end mb-4">
           <div className="w-full md:w-auto">
             <Form controlId="datePicker">
@@ -70,7 +71,7 @@ const ViewPatientList = () => {
                   type="date"
                   value={selectedDate}
                   onChange={handleDateChange}
-                  className="form-control bg-gray-100 border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="form-control bg-blue-100 border-blue-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </Form.Group>
             </Form>
@@ -85,9 +86,9 @@ const ViewPatientList = () => {
             ) : details.length === 0 ? (
               <p className="text-center text-gray-700 font-medium">{message}</p>
             ) : (
-              <table className="table-auto w-full border-collapse border border-gray-400">
+              <table className="table-auto w-full border-collapse border border-blue-400">
                 <thead>
-                  <tr className="bg-gray-200 text-gray-700 font-medium">
+                  <tr className="bg-blue-200 text-black-700 font-medium">
                     {headings.map((h) => (
                       <th key={h} className="px-4 py-2">
                         {h}
@@ -100,14 +101,15 @@ const ViewPatientList = () => {
                     <tr
                       key={index}
                       className={`${
-                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                      } hover:bg-gray-200 text-gray-700`}
+                        index % 2 === 0 ? "bg-blue-100" : "bg-white"
+                      } hover:text-gray-700`}
                     >
                       <td className="px-4 py-2">{patient.patientname}</td>
                       <td className="px-4 py-2">{patient.age}</td>
                       <td className="px-4 py-2">{patient.gender}</td>
                       <td className="px-4 py-2">{patient.appointment_date}</td>
                       <td className="px-4 py-2">{patient.appointment_time}</td>
+                      <td className="px-4 py-2">Dr. {patient.doctor}</td>
                       <td className="px-4 py-2">
                         <input
                           type="checkbox"

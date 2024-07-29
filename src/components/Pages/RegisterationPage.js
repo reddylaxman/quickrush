@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,11 +12,10 @@ const RegistrationPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+  const [otp, setOtp] = useState("");
+  const [showOtpPopup, setShowOtpPopup] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(process.env.REACT_APP_VERCEL_URL);
-  });
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -30,27 +29,58 @@ const RegistrationPage = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fullname, email, password }),
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        toast.success("Registered Successfully");
-        // Clear form fields after successful registration
-        setFullname("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setTimeout(() => {
-          navigate("/");
-        }, 3168);
+        if (
+          data.message.includes(
+            "User registered successfully! OTP sent to email."
+          )
+        ) {
+          setShowOtpPopup(true);
+        } else if (
+          data.message.includes(
+            "Email already exists but is not verified. OTP has been resent."
+          )
+        ) {
+          setShowOtpPopup(true);
+          toast.success(
+            "Email already exists but is not verified. OTP has been resent."
+          );
+        } else {
+          toast.error(data.error || "Registration failed. Please try again.");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Register failed. Please try again.");
+        toast.error("Registration failed. Please try again.");
+      });
+  }
+
+  function handleOtpSubmit(e) {
+    e.preventDefault();
+
+    fetch(`${process.env.REACT_APP_VERCEL_URL}/api/users/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message === "OTP verified successfully") {
+          toast.success("Registration and OTP verification successful.");
+          setShowOtpPopup(false);
+          setTimeout(() => {
+            navigate("/Login");
+          }, 2000);
+        } else {
+          toast.error(
+            data.error || "OTP verification failed. Please try again."
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("OTP verification failed. Please try again.");
       });
   }
 
@@ -68,6 +98,10 @@ const RegistrationPage = () => {
 
   function handleChangeConfirmPassword(e) {
     setConfirmPassword(e.target.value);
+  }
+
+  function handleChangeOtp(e) {
+    setOtp(e.target.value);
   }
 
   const togglePasswordVisibility = () => {
@@ -174,7 +208,7 @@ const RegistrationPage = () => {
             <div className="flex justify-between items-center">
               <button
                 type="submit"
-                className="bg-green-500 text-white p-2 rounded"
+                className="bg-blue-400 text-white p-2 rounded"
               >
                 Register
               </button>
@@ -185,6 +219,51 @@ const RegistrationPage = () => {
           </form>
         </div>
       </div>
+
+      {/* OTP Popup */}
+      {showOtpPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Verify OTP</h2>
+            <form onSubmit={handleOtpSubmit}>
+              <div className="mb-4">
+                <label
+                  htmlFor="otp"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  OTP
+                </label>
+                <input
+                  type="text"
+                  id="otp"
+                  name="otp"
+                  value={otp}
+                  placeholder="Enter OTP"
+                  onChange={handleChangeOtp}
+                  required
+                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  Verify OTP
+                </button>
+                <button
+                  type="button"
+                  className="ml-4 bg-red-500 text-white p-2 rounded"
+                  onClick={() => setShowOtpPopup(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <ToastContainer />
     </div>
   );

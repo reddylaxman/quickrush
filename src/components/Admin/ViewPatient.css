@@ -11,3 +11,6 @@
   font-size: 14px; /* Adjust font size of table content */
   width: 100%; /* Set table width to 100% of its container */
 }
+.container {
+  background-color: #f8f8ffbb;
+}

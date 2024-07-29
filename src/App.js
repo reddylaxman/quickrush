@@ -11,12 +11,10 @@ import FindDoctor from "./components/User/FindADoctor";
 import Services from "./components/User/Services";
 import DoctorPatientList from "./components/Doctor/DoctorPatientList";
 import DoctorDashboard from "./components/Doctor/Dashboard";
-import DoctorRegister from "./components/Admin/DoctorRegister";
 import AdminViewDoctors from "./components/Admin/ViewDoctors";
-import EditDoctor from "./components/Admin/EditDoctorDetails";
 import ViewPatientList from "./components/Admin/ViewPatient";
 import Dashboard from "./components/Admin/Dashboard";
-import Login from "./components/Pages/LoginPage"; // Import CombinedLogin component
+import Login from "./components/Pages/LoginPage";
 import "./App.css";
 const App = () => {
   const [role, setRole] = useState(
@@ -58,9 +56,7 @@ const App = () => {
           <Route path="/User/AppointmentForm" element={<AppointmentForm />} />
           <Route path="/Doctor/PatientsList" element={<DoctorPatientList />} />
           <Route path="/Doctor/Dashboard" element={<DoctorDashboard />} />
-          <Route path="/Admin/AddDoctor" element={<DoctorRegister />} />
           <Route path="/Admin/ViewDoctors" element={<AdminViewDoctors />} />
-          <Route path="/Admin/edit-doctor/:id" element={<EditDoctor />} />
           <Route path="/Admin/ViewPatients" element={<ViewPatientList />} />
           <Route path="/Admin/Dashboard" element={<Dashboard />} />
         </Routes>

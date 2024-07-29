@@ -1,66 +1,151 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Nav, Navbar } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import profile from "./images/dummy.webp";
+import ChangePassword from "./changePassword"; // Ensure this is the correct path to your ChangePassword component
 
-const PatientNavbar = ({ setRole }) => {
+const UserNavbar = ({ setRole }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const username = localStorage.getItem("username");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     setRole("null");
     navigate("/");
   };
 
-  return (
-    <Navbar className="navbar bg-white shadow-md" expand="lg">
-      <h4 className="text-xl font-bold text-gray-800">QuickRush</h4>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ms-auto">
-          <Nav.Link as={Link} to="/" className="text-gray-700">
-            Home
-          </Nav.Link>
-          <Nav.Link as={Link} to="/User/FindDoctor" className="text-gray-700">
-            Find a Doctor
-          </Nav.Link>
-          <Nav.Link
-            as={Link}
-            to="/User/AppointmentForm"
-            className="text-gray-700"
-          >
-            Book Appointment
-          </Nav.Link>
-          <Nav.Link as={Link} to="/User/Services" className="text-gray-700">
-            Services
-          </Nav.Link>
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
 
-          <div className="flex items-center relative">
-            <img
-              src={profile}
-              alt="Profile"
-              className="w-12 h-12 rounded-full mr-2"
-            />
-            <select
-              onChange={handleLogout}
-              className="w-48 h-10 px-2 py-1 bg-white text-base  focus:outline-none"
-              style={{ fontSize: "20px" }}
+  // Handle click outside of dropdown to close it
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <>
+      <Navbar className="bg-white shadow-md" expand="lg">
+        <Navbar.Brand
+          as={Link}
+          to="/"
+          className="text-xl font-bold text-gray-800"
+        >
+          QuickRush
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto flex items-center space-x-4">
+            <Nav.Link
+              as={Link}
+              to="/"
+              className={`nav-link ${
+                location.pathname === "/" ? "text-blue-500" : "text-gray-600"
+              }`}
             >
-              <option value="" disabled selected hidden>
-                {username}
-              </option>
-              <option
-                value="logout"
-                className="bg-white text-black text-sm cursor-pointer"
+              Home
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/User/FindDoctor"
+              className={`nav-link ${
+                location.pathname === "/User/FindDoctor"
+                  ? "text-blue-500"
+                  : "text-gray-600"
+              }`}
+            >
+              Find a Doctor
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/User/AppointmentForm"
+              className={`nav-link ${
+                location.pathname === "/User/AppointmentForm"
+                  ? "text-blue-500"
+                  : "text-gray-600"
+              }`}
+            >
+              Book Appointment
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/User/Services"
+              className={`nav-link ${
+                location.pathname === "/User/Services"
+                  ? "text-blue-500"
+                  : "text-gray-600"
+              }`}
+            >
+              Services
+            </Nav.Link>
+            <div
+              className="relative flex items-center cursor-pointer"
+              onClick={toggleDropdown}
+              ref={dropdownRef}
+            >
+              <img
+                src={profile}
+                alt="Profile"
+                className="w-12 h-12 rounded-full"
+              />
+              <span className="ml-2 font-semibold">{username}</span>
+              <svg
+                className="ml-2 w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Logout
-              </option>
-            </select>
-          </div>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+              {dropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
+                  <div className="py-2 px-4 border-b border-gray-200 text-gray-800 font-semibold">
+                    {username}
+                  </div>
+                  <div className="py-1">
+                    <button
+                      onClick={() => setShowChangePassword(true)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 hover:underline"
+                    >
+                      Change Password
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 hover:underline"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+
+      {showChangePassword && (
+        <ChangePassword onClose={() => setShowChangePassword(false)} />
+      )}
+    </>
   );
 };
 
-export default PatientNavbar;
+export default UserNavbar;

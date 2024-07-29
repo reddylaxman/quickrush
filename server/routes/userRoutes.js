@@ -1,5 +1,10 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/userController.js";
+import {
+  registerUser,
+  loginUser,
+  verifyOtp,
+  changePassword,
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -9,4 +14,9 @@ router.post("/register", registerUser);
 // User Login
 router.post("/login", loginUser);
 
+// Verify OTP
+router.post("/verify-otp", verifyOtp);
+
+//Change Password
+router.post("/change-password", changePassword);
 export default router;

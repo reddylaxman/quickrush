@@ -1,6 +1,7 @@
 .navbar {
-  height: 70px;
+  height: 90px;
   width: auto;
+  background-color: #f8f8ff;
 }
 .logo {
   font-size: 50px;
@@ -8,4 +9,70 @@
 .imgStyle {
   width: 2rem;
   border-radius: 50%;
+}
+.dropdown {
+  background-color: #f8f8ff;
+}
+.nav-link {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #000; /* Default link color */
+}
+
+.nav-link.active {
+  color: #439f90; /* Highlight color for active link */
+  font-weight: 500; /* Optional: make the active link bold */
+}
+
+.navbar-collapse {
+  align-items: center;
+}
+
+.flex.items-center.relative img {
+  border-radius: 50%;
+}
+
+.flex.items-center.relative select {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.navbar .nav-link:hover {
+  color: #007bff; /* Hover color */
+}
+
+.navbar .btn-register {
+  color: #fff;
+  background-color: #007bff; /* Background color for Register */
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+.navbar .login {
+  color: black;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 10px;
+}
+.navbar .login:hover {
+  background-color: #3394fca8;
+  color: white;
+}
+
+.navbar .btn-register:hover {
+  background-color: #0056b3; /* Slightly darker shade for hover */
 }

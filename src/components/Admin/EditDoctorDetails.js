@@ -1,215 +1,194 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
-const EditDoctor = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [doctor, setDoctor] = useState({
-    fullname: "",
-    date_of_birth: "",
-    qualification: "",
-    specialist: "",
-    email: "",
-    phone_number: "",
-    password: "",
-  });
+const EditDoctor = ({ doctor, onClose }) => {
+  const [doctorData, setDoctorData] = useState(doctor);
 
   useEffect(() => {
-    fetchDoctor();
-  }, []);
-
-  const fetchDoctor = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_VERCEL_URL}/api/doctors/${id}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch doctor");
-      }
-      const data = await response.json();
-      const dateOfBirth = new Date(data.date_of_birth)
-        .toISOString()
-        .split("T")[0];
-
-      // Update the doctor object with the parsed date
-      setDoctor({
-        ...data,
-        date_of_birth: dateOfBirth,
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  const handleCancel = () => {
-    alert("Are to want to cancel the updates");
-    navigate("/Admin/ViewDoctors");
-  };
+    setDoctorData(doctor);
+  }, [doctor]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDoctor({ ...doctor, [name]: value });
+    setDoctorData({ ...doctorData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_VERCEL_URL}/api/doctors/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(doctor),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update doctor");
+    const confirmUpdate = window.confirm(
+      "Do you want to update these details?"
+    );
+    if (confirmUpdate) {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_VERCEL_URL}/api/doctors/${doctor._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(doctorData),
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to update doctor");
+        alert("Details updated successfully");
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 500);
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while updating the doctor details.");
       }
-      alert("Details updated successfully");
-      navigate("/Admin/ViewDoctors");
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
+
   return (
-    <div className="container mx-auto py-8">
-      <h2 className="text-2xl font-bold mb-6 m-0 ">Edit Doctor</h2>
-      <div className="max-w-md mx-auto">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-4xl">
+        <h2 className="text-2xl font-bold mb-6 text-center">Edit Doctor</h2>
         <form
           onSubmit={handleSubmit}
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 shadow-lg"
+          className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-          <div className="mb-4">
-            <label
-              htmlFor="fullname"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Full Name
+          <div className="col-span-1">
+            <label htmlFor="fullname" className="block font-medium mb-1">
+              Full Name:
             </label>
             <input
               type="text"
               name="fullname"
-              value={doctor.fullname}
+              value={doctorData.fullname}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="fullname"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="dateOfBirth"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Date of Birth
-            </label>
-            <input
-              type="date"
-              name="date_of_birth"
-              value={doctor.date_of_birth}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="qualification"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Qualification
+          <div className="col-span-1">
+            <label htmlFor="qualification" className="block font-medium mb-1">
+              Qualification:
             </label>
             <input
               type="text"
               name="qualification"
-              value={doctor.qualification}
+              value={doctorData.qualification}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="qualification"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="specialist"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Specialist
+          <div className="col-span-1">
+            <label htmlFor="specialist" className="block font-medium mb-1">
+              Specialist:
             </label>
             <input
               type="text"
               name="specialist"
-              value={doctor.specialist}
+              value={doctorData.specialist}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="specialist"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Email
+          <div className="col-span-1">
+            <label htmlFor="email" className="block font-medium mb-1">
+              Email:
             </label>
             <input
               type="email"
               name="email"
-              value={doctor.email}
+              value={doctorData.email}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="phoneNumber"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Phone Number
+          <div className="col-span-1">
+            <label htmlFor="phone_number" className="block font-medium mb-1">
+              Phone Number:
             </label>
             <input
               type="tel"
               name="phone_number"
-              value={doctor.phone_number}
+              value={doctorData.phone_number}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="phone_number"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Password
+          <div className="col-span-1">
+            <label htmlFor="experience" className="block font-medium mb-1">
+              Experience (in years):
             </label>
             <input
-              type="password"
-              name="password"
-              value={doctor.password}
+              type="number"
+              name="experience"
+              value={doctorData.experience}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
+              id="experience"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              min="0"
             />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="col-span-1">
+            <label htmlFor="hospital_name" className="block font-medium mb-1">
+              Hospital/Clinic Name:
+            </label>
+            <input
+              type="text"
+              name="hospital_name"
+              value={doctorData.hospital_name}
+              onChange={handleChange}
+              id="hospital_name"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div className="col-span-1">
+            <label
+              htmlFor="consultation_fee"
+              className="block font-medium mb-1"
+            >
+              Consultation Fee:
+            </label>
+            <input
+              type="number"
+              name="consultation_fee"
+              value={doctorData.consultation_fee}
+              onChange={handleChange}
+              id="consultation_fee"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              min="0"
+              required
+            />
+          </div>
+          <div className="col-span-2">
+            <label htmlFor="address" className="block font-medium mb-1">
+              Address:
+            </label>
+            <textarea
+              name="address"
+              value={doctorData.address}
+              onChange={handleChange}
+              id="address"
+              className="border border-gray-300 rounded-md py-2 px-3 w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div className="flex items-center justify-between mt-2 space-x-4 col-span-2">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md w-full max-w-[200px]"
             >
               Update
             </button>
             <button
               type="button"
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={handleCancel}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md w-full max-w-[200px]"
+              onClick={onClose}
             >
               Cancel
             </button>

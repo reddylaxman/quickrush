@@ -2,30 +2,25 @@ import express from "express";
 import {
   registerDoctor,
   loginDoctor,
-  getDoctorById,
   getAllDoctors,
+  getDoctorById,
   updateDoctor,
   deleteDoctor,
+  changePassword,
+  verifyOtp,
+  resetPassword,
 } from "../controllers/doctorController.js";
 
 const router = express.Router();
 
-// Doctor Registration
 router.post("/register", registerDoctor);
-
-// Doctor Login
 router.post("/login", loginDoctor);
-
-// Get Doctor by ID
-router.get("/:id", getDoctorById);
-
-// Get all Doctors
 router.get("/", getAllDoctors);
-
-// Update Doctor
+router.get("/:id", getDoctorById);
 router.put("/:id", updateDoctor);
-
-// Delete Doctor
 router.delete("/:id", deleteDoctor);
+router.post("/change-password", changePassword);
+router.post("/verify-otp", verifyOtp);
+router.post("/reset-password", resetPassword);
 
 export default router;
