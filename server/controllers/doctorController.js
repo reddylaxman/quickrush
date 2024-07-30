@@ -191,8 +191,8 @@ const loginDoctor = async (req, res) => {
     res.status(200).json({
       message: "Login successful!",
       token,
-      username: doctor.fullname,
       id: doctor._id,
+      username: doctor.fullname,
     });
   } catch (error) {
     console.error(error);
@@ -330,6 +330,37 @@ const changePassword = async (req, res) => {
       .json({ error: "An error occurred while changing the password" });
   }
 };
+
+//Update Image/Avatar
+const updateAvatar = async (req, res) => {
+  const { Id, img } = req.body; // img is the base64 string
+
+  // Validate input
+  if (!Id || !img || !img.startsWith("data:image/")) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    // Find doctor by ID
+    const doctor = await Doctor.findById(Id);
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    // Update the avatar image
+    doctor.img = img;
+    await doctor.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Avatar updated successfully" });
+  } catch (error) {
+    console.error("Error updating avatar:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 export {
   registerDoctor,
   loginDoctor,
@@ -339,5 +370,6 @@ export {
   deleteDoctor,
   changePassword,
   verifyOtp,
+  updateAvatar,
   resetPassword,
 };

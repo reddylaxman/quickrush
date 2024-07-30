@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./FindADoctor.css";
 
 function FindDoctor() {
   const [doctorList, setDoctorList] = useState([]);
@@ -37,43 +36,37 @@ function FindDoctor() {
   };
 
   return (
-    <div
-      className="center"
-      style={{
-        marginTop: "60px",
-        width: "80%",
-        marginLeft: "auto",
-        marginRight: "auto",
-      }}
-    >
-      <h1>Find a Doctor</h1>
+    <div className="container mx-auto mt-16 px-4">
+      <h1 className="text-3xl font-bold mb-4 text-center">Find a Doctor</h1>
       <input
         type="text"
         placeholder="Search for doctor"
-        className="mb-4 p-2 border border-gray-300 rounded"
-        style={{ width: "80%" }}
+        className="mb-8 p-2 border border-gray-300 rounded w-full md:w-3/4 mx-auto"
         onChange={filterBySearch}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredList.map((doctor, index) => (
-          <div key={index} className="col">
-            <div className="doctor-card">
-              <img
-                className="doctor-image"
-                src={doctor.img || "default_photo_url_here"}
-                alt="Doctor"
-              />
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{doctor.fullname}</div>
-                <p className="text-gray-700 text-base">{doctor.specialist}</p>
-                <button
-                  onClick={() => handleBookAppointment(doctor)}
-                  className="mt-2 bg-blue-500 text-white p-2 rounded"
-                >
-                  Book Appointment
-                </button>
+          <div
+            key={index}
+            className="bg-white shadow-lg rounded-lg overflow-hidden"
+          >
+            <img
+              className="w-45 h-45 object-cover rounded-full mx-auto mt-4"
+              src={doctor.img || "default_photo_url_here"}
+              alt="Doctor"
+            />
+            <div className="p-4">
+              <div className="font-bold text-xl mb-2 text-blue-600">
+                {doctor.fullname}
               </div>
+              <p className="text-gray-700 text-base">{doctor.specialist}</p>
+              <button
+                onClick={() => handleBookAppointment(doctor)}
+                className="mt-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300"
+              >
+                Book Appointment
+              </button>
             </div>
           </div>
         ))}

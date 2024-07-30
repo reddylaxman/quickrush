@@ -1,16 +1,36 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import profile from "./images/dummy.webp";
-import ChangePassword from "./changePassword"; // Ensure this is the correct path to your ChangePassword component
-
+import ChangePassword from "./changePassword";
+import ProfileUpdate from "./ProfileUpdate"; // Ensure this is the correct path to your ProfileUpdate component
+import ProfileImage from "./images/dummy.webp";
 const DoctorNavbar = ({ setRole }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const username = localStorage.getItem("username");
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showProfileUpdate, setShowProfileUpdate] = useState(false); // State for profile update popup
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [doctor, setDoctor] = useState(null); // State to hold doctor details
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    // Fetch doctor details when component mounts
+    const fetchDoctorDetails = async () => {
+      const doctorId = localStorage.getItem("id");
+
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_VERCEL_URL}/api/doctors/${doctorId}`
+        );
+        const data = await response.json();
+        setDoctor(data);
+      } catch (error) {
+        console.error("Error fetching doctor details:", error);
+      }
+    };
+
+    fetchDoctorDetails();
+  }, []);
 
   const handleLogout = () => {
     setRole("null");
@@ -20,6 +40,11 @@ const DoctorNavbar = ({ setRole }) => {
   const handleChangePasswordClick = () => {
     setShowChangePassword(true);
     setDropdownOpen(false); // Close the dropdown when changing password
+  };
+
+  const handleProfileUpdateClick = () => {
+    setShowProfileUpdate(true);
+    setDropdownOpen(false); // Close the dropdown when updating profile
   };
 
   const toggleDropdown = () => {
@@ -33,8 +58,7 @@ const DoctorNavbar = ({ setRole }) => {
     }
   };
 
-  // Add event listener for clicks outside of the dropdown
-  React.useEffect(() => {
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -82,11 +106,13 @@ const DoctorNavbar = ({ setRole }) => {
               ref={dropdownRef}
             >
               <img
-                src={profile}
+                src={doctor?.img || ProfileImage} // Display doctor's image or default if not available
                 alt="Profile"
                 className="w-12 h-12 rounded-full"
               />
-              <span className="ml-2 font-semibold">{username}</span>
+              <span className="ml-2 font-semibold">
+                {doctor?.fullname || "Username"}
+              </span>
               <svg
                 className="ml-2 w-4 h-4 text-gray-600"
                 fill="none"
@@ -104,9 +130,15 @@ const DoctorNavbar = ({ setRole }) => {
               {dropdownOpen && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
                   <div className="py-2 px-4 border-b border-gray-200 text-gray-800 font-semibold">
-                    {username}
+                    {doctor?.fullname || "Username"}
                   </div>
                   <div className="py-1">
+                    <button
+                      onClick={handleProfileUpdateClick}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 hover:underline"
+                    >
+                      Update Profile
+                    </button>
                     <button
                       onClick={handleChangePasswordClick}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 hover:underline"
@@ -129,6 +161,9 @@ const DoctorNavbar = ({ setRole }) => {
 
       {showChangePassword && (
         <ChangePassword onClose={() => setShowChangePassword(false)} />
+      )}
+      {showProfileUpdate && (
+        <ProfileUpdate onClose={() => setShowProfileUpdate(false)} />
       )}
     </>
   );

@@ -19,7 +19,7 @@ function Login({ setRole }) {
     const endpoints = {
       doctor: `${process.env.REACT_APP_VERCEL_URL}/api/doctors/login`,
       admin: `${process.env.REACT_APP_VERCEL_URL}/api/admins/login`,
-      patient: `${process.env.REACT_APP_VERCEL_URL}/api/users/login`,
+      user: `${process.env.REACT_APP_VERCEL_URL}/api/users/login`,
     };
 
     try {
@@ -32,7 +32,7 @@ function Login({ setRole }) {
       const data = await response.json();
 
       console.log("Response status:", response.status);
-      console.log("Response data:", data);
+      console.log("Response Data", data);
 
       if (!response.ok) {
         if (response.status === 404) {
@@ -48,9 +48,9 @@ function Login({ setRole }) {
           toast.error("An error occurred while logging in");
         }
       } else {
-        localStorage.setItem("username", data.username);
         localStorage.setItem("id", data.id);
         localStorage.setItem("role", role);
+        localStorage.setItem("username", data.username);
         toast.success("You logged in successfully");
         setRole(role);
         setTimeout(() => {
@@ -104,7 +104,7 @@ function Login({ setRole }) {
                 </option>
                 <option value="admin">Admin</option>
                 <option value="doctor">Doctor</option>
-                <option value="patient">User</option>
+                <option value="user">User</option>
               </select>
             </div>
             <div className="mb-4 relative">
@@ -159,10 +159,11 @@ function Login({ setRole }) {
 
             <button
               type="submit"
-              className="w-full bg-blue-400 text-white p-2 rounded mt-4"
+              className="w-full bg-blue-400 text-white p-2 rounded mt-4 hover:bg-blue-500 hover:shadow-lg transition duration-300"
             >
               Login
             </button>
+
             <Link
               to="/Register"
               className="block text-center text-blue-500 mt-4"

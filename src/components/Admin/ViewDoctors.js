@@ -163,14 +163,14 @@ const AdminViewDoctors = () => {
 
       {/* Overlay for Registration Form */}
       {showRegisterForm && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-transparent flex justify-center items-center z-50">
           <DoctorRegister onClose={handleCloseRegisterForm} />
         </div>
       )}
 
       {/* Overlay for Edit Form */}
       {showEditForm && doctorToEdit && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-transparent flex justify-center items-center z-50">
           <EditDoctor doctor={doctorToEdit} onClose={handleCloseEditForm} />
         </div>
       )}

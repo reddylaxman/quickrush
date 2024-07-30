@@ -4,6 +4,8 @@ import {
   loginUser,
   verifyOtp,
   changePassword,
+  updateAvatar,
+  getById,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -19,4 +21,8 @@ router.post("/verify-otp", verifyOtp);
 
 //Change Password
 router.post("/change-password", changePassword);
+
+router.post("/update-avatar", updateAvatar);
+
+router.get("/:id", getById);
 export default router;

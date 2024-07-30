@@ -43,7 +43,7 @@ const App = () => {
           {role === "doctor" && (
             <DoctorNavbar setRole={setRole} onLogout={handleLogout} />
           )}
-          {role === "patient" && (
+          {role === "user" && (
             <PatientNavbar setRole={setRole} onLogout={handleLogout} />
           )}
         </div>

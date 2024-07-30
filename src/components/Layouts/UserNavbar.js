@@ -1,16 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import profile from "./images/dummy.webp";
-import ChangePassword from "./changePassword"; // Ensure this is the correct path to your ChangePassword component
+import profile from "./images/dummy.webp"; // Default profile image
+import ChangePassword from "./changePassword"; // Ensure the correct path
+import ProfileUpdate from "./ProfileUpdate"; // Ensure the correct path
 
 const UserNavbar = ({ setRole }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const username = localStorage.getItem("username");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showProfileUpdate, setShowProfileUpdate] = useState(false);
+  const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
+
+  // Fetch user details when the component mounts
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const userId = localStorage.getItem("id"); // Adjust based on your local storage key
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_VERCEL_URL}/api/users/${userId}`
+        );
+        const data = await response.json();
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
 
   const handleLogout = () => {
     setRole("null");
@@ -96,11 +116,13 @@ const UserNavbar = ({ setRole }) => {
               ref={dropdownRef}
             >
               <img
-                src={profile}
+                src={user?.img || profile} // Display user's image or default if not available
                 alt="Profile"
                 className="w-12 h-12 rounded-full"
               />
-              <span className="ml-2 font-semibold">{username}</span>
+              <span className="ml-2 font-semibold">
+                {user?.fullname || "Username"}
+              </span>
               <svg
                 className="ml-2 w-4 h-4 text-gray-600"
                 fill="none"
@@ -118,9 +140,15 @@ const UserNavbar = ({ setRole }) => {
               {dropdownOpen && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
                   <div className="py-2 px-4 border-b border-gray-200 text-gray-800 font-semibold">
-                    {username}
+                    {user?.fullname || "Username"}
                   </div>
                   <div className="py-1">
+                    <button
+                      onClick={() => setShowProfileUpdate(true)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 hover:underline"
+                    >
+                      Update Profile
+                    </button>
                     <button
                       onClick={() => setShowChangePassword(true)}
                       className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 hover:underline"
@@ -143,6 +171,9 @@ const UserNavbar = ({ setRole }) => {
 
       {showChangePassword && (
         <ChangePassword onClose={() => setShowChangePassword(false)} />
+      )}
+      {showProfileUpdate && (
+        <ProfileUpdate onClose={() => setShowProfileUpdate(false)} />
       )}
     </>
   );

@@ -208,10 +208,11 @@ const RegistrationPage = () => {
             <div className="flex justify-between items-center">
               <button
                 type="submit"
-                className="bg-blue-400 text-white p-2 rounded"
+                className="bg-blue-400 text-white p-2 rounded hover:bg-blue-500 hover:shadow-lg transition duration-300"
               >
                 Register
               </button>
+
               <Link to="/Login" className="block text-blue-500 mt-4">
                 Back to Login
               </Link>

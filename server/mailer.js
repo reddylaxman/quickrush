@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log(process.env.EMAIL, process.env.PASSWORD);
+// console.log(process.env.EMAIL, process.env.PASSWORD);
 
 export const sendOtpEmail = async (to, otp) => {
   try {

@@ -135,7 +135,6 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       message: "Login successful!",
       token,
-      username: user.fullname,
       id: user._id,
     });
   } catch (error) {
@@ -190,4 +189,56 @@ const changePassword = async (req, res) => {
   }
 };
 
-export { registerUser, verifyOtp, loginUser, changePassword };
+const updateAvatar = async (req, res) => {
+  const { Id, img } = req.body; // img is the base64 string
+
+  // Validate input
+  if (!Id || !img || !img.startsWith("data:image/")) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
+  try {
+    // Find user by ID (assuming the model name is User)
+    const user = await User.findById(Id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update the avatar image
+    user.img = img;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Avatar updated successfully" });
+  } catch (error) {
+    console.error("Error updating avatar:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Get Doctor By ID
+const getById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving doctor details" });
+  }
+};
+
+export {
+  registerUser,
+  verifyOtp,
+  loginUser,
+  changePassword,
+  updateAvatar,
+  getById,
+};

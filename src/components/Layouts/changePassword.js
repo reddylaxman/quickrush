@@ -49,17 +49,19 @@ const ChangePassword = ({ onClose }) => {
       toast.error("An error occurred while changing the password");
     }
   };
+
   const handleClickOutside = (event) => {
     if (formRef.current && !formRef.current.contains(event.target)) {
       onClose();
     }
   };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [handleClickOutside]);
+  }, []);
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
@@ -82,7 +84,7 @@ const ChangePassword = ({ onClose }) => {
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               required
-              className="w-full p-2 border border-gray-300 rounded pr-10" // Added pr-10 for space for the icon
+              className="w-full p-2 border border-gray-300 rounded pr-10"
             />
             <button
               type="button"
@@ -108,7 +110,7 @@ const ChangePassword = ({ onClose }) => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
-              className="w-full p-2 border border-gray-300 rounded pr-10" // Added pr-10 for space for the icon
+              className="w-full p-2 border border-gray-300 rounded pr-10"
             />
             <button
               type="button"
