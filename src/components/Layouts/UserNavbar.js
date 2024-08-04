@@ -58,13 +58,14 @@ const UserNavbar = ({ setRole }) => {
   return (
     <>
       <Navbar className="bg-white shadow-md" expand="lg">
-        <Navbar.Brand
-          as={Link}
-          to="/"
-          className="text-xl font-bold text-gray-800"
+        <h4
+          className="text-xl font-bold text-blue-600"
+          style={{ marginLeft: "6px" }}
         >
-          QuickRush
-        </Navbar.Brand>
+          <Link to="/" style={{ textDecorationLine: "none" }}>
+            QuickRush
+          </Link>
+        </h4>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto flex items-center space-x-4">
@@ -121,7 +122,7 @@ const UserNavbar = ({ setRole }) => {
                 alt="Profile"
                 className="w-12 h-12 rounded-full"
               />
-              <span className="ml-2 font-semibold">
+              <span className="ml-2 font-semibold text-blue-500">
                 {user?.fullname || "Username"}
               </span>
               <svg

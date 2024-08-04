@@ -8,7 +8,7 @@ const DoctorPatientList = () => {
     "Patient Name",
     "Age",
     "Gender",
-    "Appointment Date",
+
     "Appointment Time",
     "Checked", // New column for marking appointments as checked
   ];
@@ -137,7 +137,7 @@ const DoctorPatientList = () => {
                       <td className="px-4 py-2">{patient.patientname}</td>
                       <td className="px-4 py-2">{patient.age}</td>
                       <td className="px-4 py-2">{patient.gender}</td>
-                      <td className="px-4 py-2">{patient.appointment_date}</td>
+
                       <td className="px-4 py-2">{patient.appointment_time}</td>
                       <td className="px-4 py-2">
                         <input

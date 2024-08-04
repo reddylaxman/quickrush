@@ -8,7 +8,14 @@ import Button from "react-bootstrap/Button";
 
 const DefaultNavbar = () => (
   <Navbar className="navbar" expand="lg">
-    <h4 className="text-xl font-bold text-gray-800">QuickRush</h4>
+    <h4
+      className="text-xl font-bold text-blue-600"
+      style={{ marginLeft: "6px" }}
+    >
+      <Link to="/" style={{ textDecorationLine: "none" }}>
+        QuickRush
+      </Link>
+    </h4>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="ml-auto text-center">
