@@ -8,22 +8,24 @@ const AppointmentForm = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [specialist, setSpecialist] = useState("");
-  const [doctor, setDoctor] = useState("");
-  const checked = "false";
+  const [doctorId, setDoctorId] = useState(""); // ID of selected doctor
+  const [doctorName, setDoctorName] = useState(""); // Name of selected doctor
+  const [consultationFee, setConsultationFee] = useState(0);
   const [appointment_date, setAppointment_date] = useState("");
   const [appointment_time, setAppointment_time] = useState("");
   const [doctors, setDoctors] = useState([]);
   const [specialists, setSpecialists] = useState([]);
   const [loadingDoctors, setLoadingDoctors] = useState(true);
   const [loadingSpecialists, setLoadingSpecialists] = useState(true);
-
+  const checked = "false";
   const location = useLocation();
+  const userId = localStorage.getItem("id");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const doctorParam = params.get("doctor");
     const specialistParam = params.get("specialist");
-    if (doctorParam) setDoctor(doctorParam);
+
     if (specialistParam) setSpecialist(specialistParam);
 
     // Fetch list of doctors
@@ -44,6 +46,18 @@ const AppointmentForm = () => {
         ];
         setSpecialists(uniqueSpecialists);
         setLoadingSpecialists(false);
+
+        // Set doctorId and doctorName based on the doctorParam
+        if (doctorParam) {
+          const selectedDoctor = data.find(
+            (doc) => doc.fullname === doctorParam
+          );
+          if (selectedDoctor) {
+            setDoctorId(selectedDoctor._id); // Set doctor ID
+            setDoctorName(selectedDoctor.fullname);
+            setConsultationFee(selectedDoctor.consultation_fee || 0);
+          }
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -51,51 +65,51 @@ const AppointmentForm = () => {
         setLoadingDoctors(false);
         setLoadingSpecialists(false);
       });
-  }, [location]);
+  }, [location.search]);
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      fetch(`${process.env.REACT_APP_VERCEL_URL}/api/appointments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          patientname,
-          age,
-          gender,
-          specialist,
-          doctor,
-          checked,
-          appointment_date,
-          appointment_time,
-        }),
+    fetch(`${process.env.REACT_APP_VERCEL_URL}/api/appointments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        patientname,
+        age,
+        gender,
+        specialist,
+        doctor: doctorId, // Send doctor ID
+        doctorName, // Send doctor name
+        appointment_date,
+        appointment_time,
+        userId,
+        consultation_fee: consultationFee,
+        checked,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error("Network response was not ok.");
       })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-
-          throw new Error("Network response was not ok.");
-        })
-        .then((data) => {
-          toast.success("Booking Appointment Successfully");
-          setPatientname("");
-          setAge("");
-          setGender("");
-          setSpecialist("");
-          setDoctor("");
-          setAppointment_date("");
-          setAppointment_time("");
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Booking Appointment failed. Please try again.");
-        });
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Booking Appointment failed. Please try again.");
-    }
-  }
+      .then(() => {
+        toast.success("Booking Appointment Successfully");
+        // Reset form fields
+        setPatientname("");
+        setAge("");
+        setGender("");
+        setSpecialist("");
+        setDoctorId("");
+        setDoctorName("");
+        setConsultationFee(0);
+        setAppointment_date("");
+        setAppointment_time("");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Booking Appointment failed. Please try again.");
+      });
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -162,8 +176,18 @@ const AppointmentForm = () => {
             <select
               id="doctor"
               name="doctor"
-              value={doctor}
-              onChange={(e) => setDoctor(e.target.value)}
+              value={doctorId} // Use doctorId state variable
+              onChange={(e) => {
+                const selectedDoctorId = e.target.value;
+                setDoctorId(selectedDoctorId);
+                const selectedDoctor = doctors.find(
+                  (doc) => doc._id === selectedDoctorId
+                );
+                if (selectedDoctor) {
+                  setDoctorName(selectedDoctor.fullname);
+                  setConsultationFee(selectedDoctor.consultation_fee || 0);
+                }
+              }}
               className="form-control input-field mb-4"
               required
             >
@@ -176,12 +200,29 @@ const AppointmentForm = () => {
                 doctors
                   .filter((doc) => doc.specialist === specialist)
                   .map((doctor) => (
-                    <option key={doctor.id} value={doctor.fullname}>
+                    <option key={doctor._id} value={doctor._id}>
+                      {" "}
+                      {/* Use doctor._id as value */}
                       {doctor.fullname}
                     </option>
                   ))
               )}
             </select>
+            <div className="relative mb-4">
+              <input
+                type="number"
+                id="consultation_fee"
+                name="consultation_fee"
+                placeholder="Consultation Fee"
+                value={consultationFee}
+                readOnly
+                className="form-control input-field"
+                required
+              />
+              <span className="absolute inset-y-0 right-4 flex items-center text-gray-500">
+                ₹
+              </span>
+            </div>
             <input
               type="date"
               id="appointment_date"

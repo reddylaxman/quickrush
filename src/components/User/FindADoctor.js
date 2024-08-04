@@ -28,7 +28,6 @@ function FindDoctor() {
     });
     setFilteredList(updatedList);
   };
-
   const handleBookAppointment = (doctor) => {
     navigate(
       `/User/AppointmentForm?doctor=${doctor.fullname}&specialist=${doctor.specialist}`
@@ -51,11 +50,13 @@ function FindDoctor() {
             key={index}
             className="bg-white shadow-lg rounded-lg overflow-hidden"
           >
-            <img
-              className="w-45 h-45 object-cover rounded-full mx-auto mt-4"
-              src={doctor.img || "default_photo_url_here"}
-              alt="Doctor"
-            />
+            <div className="w-50 h-50 mx-auto mt-4">
+              <img
+                className="w-full h-full object-cover rounded-full"
+                src={doctor.img || "default_photo_url_here"}
+                alt="Doctor"
+              />
+            </div>
             <div className="p-4">
               <div className="font-bold text-xl mb-2 text-blue-600">
                 {doctor.fullname}

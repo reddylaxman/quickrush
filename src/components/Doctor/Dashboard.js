@@ -22,7 +22,7 @@ function DoctorDashboard() {
 
         // Filter data based on the doctor's name
         const doctorPatients = data.filter(
-          (patient) => patient.doctor === storedDoctorName
+          (patient) => patient.doctorName === storedDoctorName
         );
 
         // Count the number of patients

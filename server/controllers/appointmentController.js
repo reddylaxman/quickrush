@@ -8,9 +8,12 @@ const addAppointment = async (req, res) => {
     gender,
     specialist,
     doctor,
+    doctorName,
     appointment_date,
     appointment_time,
     checked,
+    consultation_fee,
+    userId,
   } = req.body;
 
   if (
@@ -19,9 +22,12 @@ const addAppointment = async (req, res) => {
     !gender ||
     !specialist ||
     !doctor ||
+    !doctorName ||
     !appointment_date ||
     !appointment_time ||
-    !checked
+    !checked ||
+    !consultation_fee ||
+    !userId
   ) {
     return res
       .status(422)
@@ -35,9 +41,12 @@ const addAppointment = async (req, res) => {
       gender,
       specialist,
       doctor,
+      doctorName,
       appointment_date,
       appointment_time,
       checked,
+      consultation_fee,
+      userId,
     });
     await newAppointment.save();
     res.status(201).json({ message: "Appointment Added Successfully..." });
@@ -48,11 +57,27 @@ const addAppointment = async (req, res) => {
       .json({ error: "An error occurred while creating the appointment." });
   }
 };
-
 // Retrieve Appointments
 const getAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find();
+    res.status(200).json(appointments);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving appointments." });
+  }
+};
+// Retrieve Appointments by User ID
+const getAppointmentsByUserId = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ userId: req.params.id });
+    if (appointments.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No appointments found for this user." });
+    }
     res.status(200).json(appointments);
   } catch (error) {
     console.error(error);
@@ -107,4 +132,31 @@ const updateAppointment = async (req, res) => {
   }
 };
 
-export { getAppointments, addAppointment, updateAppointment };
+/// Cancel Appointment (find and delete by ID)
+const cancelAppointment = async (req, res) => {
+  try {
+    // Find and delete the appointment by ID
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ error: "Appointment not found" });
+    }
+
+    res.status(200).json({
+      message: "Appointment canceled successfully",
+      appointment,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while canceling the appointment." });
+  }
+};
+export {
+  getAppointments,
+  getAppointmentsByUserId,
+  addAppointment,
+  updateAppointment,
+  cancelAppointment,
+};

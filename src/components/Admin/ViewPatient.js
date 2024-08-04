@@ -109,7 +109,7 @@ const ViewPatientList = () => {
                       <td className="px-4 py-2">{patient.gender}</td>
                       <td className="px-4 py-2">{patient.appointment_date}</td>
                       <td className="px-4 py-2">{patient.appointment_time}</td>
-                      <td className="px-4 py-2">Dr. {patient.doctor}</td>
+                      <td className="px-4 py-2">Dr. {patient.doctorName}</td>
                       <td className="px-4 py-2">
                         <input
                           type="checkbox"

@@ -101,15 +101,16 @@ const UserNavbar = ({ setRole }) => {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              to="/User/Services"
+              to="/User/MyBookings"
               className={`nav-link ${
-                location.pathname === "/User/Services"
+                location.pathname === "/User/MyBookings"
                   ? "text-blue-500"
                   : "text-gray-600"
               }`}
             >
-              Services
+              My Bookings
             </Nav.Link>
+
             <div
               className="relative flex items-center cursor-pointer"
               onClick={toggleDropdown}

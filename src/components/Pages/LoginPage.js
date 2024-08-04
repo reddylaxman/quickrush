@@ -12,7 +12,7 @@ function Login({ setRole }) {
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRoleState] = useState("");
   const navigate = useNavigate();
-
+  console.log(process.env.REACT_APP_VERCEL_URL);
   async function handleSubmit(e) {
     e.preventDefault();
 

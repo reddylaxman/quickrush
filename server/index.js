@@ -12,7 +12,12 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json());
+// Increase the JSON payload limit to 10mb (adjust as needed)
+app.use(express.json({ limit: "10mb" }));
+
+// Handle other middleware and routes here
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
 const PORT = process.env.PORT || 3133;
 
 app.use(cors());

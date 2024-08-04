@@ -11,17 +11,13 @@ const UpdateProfile = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [showAvatarEdit, setShowAvatarEdit] = useState(false);
 
-  // Retrieve role from localStorage
   const userRole = localStorage.getItem("role");
-
-  // Determine the API URL based on role
   const apiUrl =
     userRole === "doctor"
       ? `${process.env.REACT_APP_VERCEL_URL}/api/doctors/update-avatar`
       : `${process.env.REACT_APP_VERCEL_URL}/api/users/update-avatar`;
 
   useEffect(() => {
-    // Fetch doctor details to pre-fill the form
     const fetchUserDetails = async () => {
       const Id = localStorage.getItem("id");
       try {
@@ -46,6 +42,18 @@ const UpdateProfile = ({ onClose }) => {
     setImage(null);
     setImgBase64(null);
     setShowAvatarEdit(false);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+        setShowAvatarEdit(true);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleFormSubmit = async (e) => {
@@ -118,10 +126,7 @@ const UpdateProfile = ({ onClose }) => {
                 type="file"
                 accept="image/*"
                 style={{ display: "none" }}
-                onChange={(e) => {
-                  setImage(URL.createObjectURL(e.target.files[0]));
-                  setShowAvatarEdit(true);
-                }}
+                onChange={handleFileChange}
               />
               {showAvatarEdit && (
                 <div id="avatarEdit">
@@ -149,7 +154,7 @@ const UpdateProfile = ({ onClose }) => {
               }`}
               disabled={loading}
             >
-              {loading ? "Updating..." : "Update Profile"}
+              {loading ? "Updating..." : "Update Profile Pic"}
             </button>
             <button
               type="button"

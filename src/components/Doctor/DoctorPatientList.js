@@ -33,7 +33,7 @@ const DoctorPatientList = () => {
 
         // Filter the data based on the doctor's name
         const filteredData = data.filter(
-          (patient) => patient.doctor === doctorName
+          (patient) => patient.doctorName === doctorName
         );
 
         // If a date is selected, further filter appointments based on that date
