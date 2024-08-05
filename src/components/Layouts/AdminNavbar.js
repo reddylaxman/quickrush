@@ -7,11 +7,15 @@ const AdminNavbar = ({ setRole }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const username = localStorage.getItem("username");
+  const username = sessionStorage.getItem("username");
   const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     setRole("null");
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("token");
     navigate("/");
   };
 

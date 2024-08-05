@@ -18,7 +18,7 @@ const DoctorPatientList = () => {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   ); // State for selected date, default to today
-  const doctorName = localStorage.getItem("username");
+  const doctorName = sessionStorage.getItem("username");
 
   useEffect(() => {
     const fetchPatientDetails = async () => {

@@ -1,7 +1,12 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { sendOtpEmail, generateOtp, getOtpExpiration } from "../mailer.js"; // Import the OTP utility functions
+import {
+  sendOtpEmail,
+  generateOtp,
+  getOtpExpiration,
+  resetOtpEmail,
+} from "../mailer.js"; // Import the OTP utility functions
 const registerUser = async (req, res) => {
   const { fullname, email, password } = req.body;
 
@@ -58,6 +63,34 @@ const registerUser = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while processing your request..." });
+  }
+};
+
+const requestPasswordResetOtp = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Please provide an email" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const otp = generateOtp();
+    const otpExpiration = getOtpExpiration();
+    user.otp = otp;
+    user.otpExpiration = otpExpiration;
+    await user.save();
+    await resetOtpEmail(email, otp); // Send OTP for password reset
+
+    res.status(200).json({ message: "OTP sent to email" });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "An error occurred while sending OTP" });
   }
 };
 
@@ -233,10 +266,43 @@ const getById = async (req, res) => {
       .json({ error: "An error occurred while retrieving doctor details" });
   }
 };
+//Reset Password
+const resetPassword = async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  if (!email || !newPassword) {
+    return res
+      .status(400)
+      .json({ error: "Please provide email and new password" });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Hash the new password and update it in the database
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res
+      .status(500)
+      .json({ error: "An error occurred while resetting the password" });
+  }
+};
 
 export {
   registerUser,
   verifyOtp,
+  resetPassword,
+  requestPasswordResetOtp,
   loginUser,
   changePassword,
   updateAvatar,

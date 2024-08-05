@@ -9,6 +9,7 @@ import {
   changePassword,
   verifyOtp,
   resetPassword,
+  requestPasswordResetOtp,
   updateAvatar,
 } from "../controllers/doctorController.js";
 
@@ -22,6 +23,8 @@ router.put("/:id", updateDoctor);
 router.delete("/:id", deleteDoctor);
 router.post("/change-password", changePassword);
 router.post("/verify-otp", verifyOtp);
+// Send OTP
+router.post("/send-otp", requestPasswordResetOtp);
 router.post("/reset-password", resetPassword);
 router.post("/update-avatar", updateAvatar);
 

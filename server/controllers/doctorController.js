@@ -3,7 +3,12 @@
 import Doctor from "../models/doctor.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { sendOtpEmail, generateOtp, getOtpExpiration } from "../mailer.js";
+import {
+  sendOtpEmail,
+  generateOtp,
+  getOtpExpiration,
+  resetOtpEmail,
+} from "../mailer.js";
 
 // Register Doctor
 const registerDoctor = async (req, res) => {
@@ -122,14 +127,15 @@ const verifyOtp = async (req, res) => {
       .json({ error: "An error occurred while verifying the OTP" });
   }
 };
+
 // Reset Password
 const resetPassword = async (req, res) => {
-  const { email, otp, newPassword } = req.body;
+  const { email, newPassword } = req.body;
 
-  if (!email || !otp || !newPassword) {
+  if (!email || !newPassword) {
     return res
       .status(400)
-      .json({ error: "Please provide email, OTP, and new password" });
+      .json({ error: "Please provide email and new password" });
   }
 
   try {
@@ -139,29 +145,28 @@ const resetPassword = async (req, res) => {
       return res.status(404).json({ error: "Doctor not found" });
     }
 
-    if (doctor.otp !== otp) {
-      return res.status(401).json({ error: "Invalid OTP" });
+    // Validate the new password (optional but recommended)
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "New password must be at least 6 characters long" });
     }
 
-    if (new Date() > doctor.otpExpiration) {
-      return res.status(401).json({ error: "OTP has expired" });
-    }
-
+    // Hash the new password and update it in the database
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     doctor.password = hashedNewPassword;
-    doctor.otp = undefined;
-    doctor.otpExpiration = undefined;
 
     await doctor.save();
 
     res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
-    console.error(error);
+    console.error("Error resetting password:", error.message);
     res
       .status(500)
       .json({ error: "An error occurred while resetting the password" });
   }
 };
+
 // Login Doctor
 const loginDoctor = async (req, res) => {
   const { email, password } = req.body;
@@ -197,6 +202,33 @@ const loginDoctor = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while logging in" });
+  }
+};
+const requestPasswordResetOtp = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Please provide an email" });
+  }
+
+  try {
+    const doctor = await Doctor.findOne({ email }); // Use Doctor model
+
+    if (!doctor) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    const otp = generateOtp();
+    const otpExpiration = getOtpExpiration();
+    doctor.otp = otp;
+    doctor.otpExpiration = otpExpiration;
+    await doctor.save();
+    await resetOtpEmail(email, otp); // Send OTP for password reset
+
+    res.status(200).json({ message: "OTP sent to email" });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "An error occurred while sending OTP" });
   }
 };
 
@@ -369,6 +401,7 @@ export {
   updateDoctor,
   deleteDoctor,
   changePassword,
+  requestPasswordResetOtp,
   verifyOtp,
   updateAvatar,
   resetPassword,

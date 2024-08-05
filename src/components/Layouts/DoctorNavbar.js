@@ -16,7 +16,7 @@ const DoctorNavbar = ({ setRole }) => {
   useEffect(() => {
     // Fetch doctor details when component mounts
     const fetchDoctorDetails = async () => {
-      const doctorId = localStorage.getItem("id");
+      const doctorId = sessionStorage.getItem("id");
 
       try {
         const response = await fetch(
@@ -34,6 +34,10 @@ const DoctorNavbar = ({ setRole }) => {
 
   const handleLogout = () => {
     setRole("null");
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("token");
     navigate("/");
   };
 

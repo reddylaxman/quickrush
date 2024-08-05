@@ -17,7 +17,7 @@ const UserNavbar = ({ setRole }) => {
   // Fetch user details when the component mounts
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const userId = localStorage.getItem("id"); // Adjust based on your local storage key
+      const userId = sessionStorage.getItem("id"); // Adjust based on your local storage key
       try {
         const response = await fetch(
           `${process.env.REACT_APP_VERCEL_URL}/api/users/${userId}`
@@ -34,6 +34,10 @@ const UserNavbar = ({ setRole }) => {
 
   const handleLogout = () => {
     setRole("null");
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("token");
     navigate("/");
   };
 

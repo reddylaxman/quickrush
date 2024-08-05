@@ -19,7 +19,7 @@ const AppointmentForm = () => {
   const [loadingSpecialists, setLoadingSpecialists] = useState(true);
   const checked = "false";
   const location = useLocation();
-  const userId = localStorage.getItem("id");
+  const userId = sessionStorage.getItem("id");
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

@@ -4,7 +4,7 @@ const MyBookings = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [noBookings, setNoBookings] = useState(false);
-  const userId = localStorage.getItem("id");
+  const userId = sessionStorage.getItem("id");
 
   useEffect(() => {
     const fetchAppointments = async () => {

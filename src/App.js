@@ -15,22 +15,26 @@ import AdminViewDoctors from "./components/Admin/ViewDoctors";
 import ViewPatientList from "./components/Admin/ViewPatient";
 import Dashboard from "./components/Admin/Dashboard";
 import Login from "./components/Pages/LoginPage";
+import ProtectedRoute from "./components/Routes/ProtectedRoute";
 import "./App.css";
+import PageNotFound from "./components/Routes/PageNotFound";
 
 const App = () => {
   const [role, setRole] = useState(
-    () => localStorage.getItem("role") || "null"
+    () => sessionStorage.getItem("role") || "null"
   );
 
   useEffect(() => {
-    localStorage.setItem("role", role);
+    sessionStorage.setItem("role", role);
   }, [role]);
 
   const handleLogout = () => {
     setRole("null");
-    localStorage.removeItem("role");
-    localStorage.removeItem("username");
-    window.location.reload(true);
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("token");
+    window.location.reload(false);
   };
 
   return (
@@ -52,14 +56,87 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/Login" element={<Login setRole={setRole} />} />
           <Route path="/Register" element={<Register />} />
-          <Route path="/User/FindDoctor" element={<FindDoctor />} />
-          <Route path="/User/MyBookings" element={<MyBookings />} />
-          <Route path="/User/AppointmentForm" element={<AppointmentForm />} />
-          <Route path="/Doctor/PatientsList" element={<DoctorPatientList />} />
-          <Route path="/Doctor/Dashboard" element={<DoctorDashboard />} />
-          <Route path="/Admin/ViewDoctors" element={<AdminViewDoctors />} />
-          <Route path="/Admin/ViewPatients" element={<ViewPatientList />} />
-          <Route path="/Admin/Dashboard" element={<Dashboard />} />
+          <Route
+            path="/User/FindDoctor"
+            element={
+              <ProtectedRoute
+                element={<FindDoctor />}
+                allowedRoles={["user"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/User/MyBookings"
+            element={
+              <ProtectedRoute
+                element={<MyBookings />}
+                allowedRoles={["user"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/User/AppointmentForm"
+            element={
+              <ProtectedRoute
+                element={<AppointmentForm />}
+                allowedRoles={["user"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/Doctor/PatientsList"
+            element={
+              <ProtectedRoute
+                element={<DoctorPatientList />}
+                allowedRoles={["doctor"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/Doctor/Dashboard"
+            element={
+              <ProtectedRoute
+                element={<DoctorDashboard />}
+                allowedRoles={["doctor"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/Admin/ViewDoctors"
+            element={
+              <ProtectedRoute
+                element={<AdminViewDoctors />}
+                allowedRoles={["admin"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/Admin/ViewPatients"
+            element={
+              <ProtectedRoute
+                element={<ViewPatientList />}
+                allowedRoles={["admin"]}
+                role={role}
+              />
+            }
+          />
+          <Route
+            path="/Admin/Dashboard"
+            element={
+              <ProtectedRoute
+                element={<Dashboard />}
+                allowedRoles={["admin"]}
+                role={role}
+              />
+            }
+          />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </div>

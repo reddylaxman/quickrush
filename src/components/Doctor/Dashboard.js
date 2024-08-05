@@ -15,7 +15,7 @@ function DoctorDashboard() {
       })
       .then((data) => {
         // Get doctor's name from session storage
-        const storedDoctorName = localStorage.getItem("username");
+        const storedDoctorName = sessionStorage.getItem("username");
         if (!storedDoctorName) {
           throw new Error("Doctor name not found in Local storage");
         }

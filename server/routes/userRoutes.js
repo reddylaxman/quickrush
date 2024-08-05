@@ -6,6 +6,8 @@ import {
   changePassword,
   updateAvatar,
   getById,
+  resetPassword,
+  requestPasswordResetOtp,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -21,6 +23,12 @@ router.post("/verify-otp", verifyOtp);
 
 //Change Password
 router.post("/change-password", changePassword);
+
+// Send OTP
+router.post("/send-otp", requestPasswordResetOtp);
+
+// Reset Password
+router.post("/reset-password", resetPassword);
 
 router.post("/update-avatar", updateAvatar);
 
