@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import illustration from "../images/7317079.jpg";
 import open from "../images/eye.png";
 import close from "../images/eye-crossed.png";
-
 function Login({ setRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -197,7 +196,7 @@ function Login({ setRole }) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 relative">
       <div className="bg-white shadow-lg rounded-lg flex w-3/4">
-        <div className="w-1/2 p-8">
+        <div className="w-1/2 p-8 mt-5">
           <h2 className="text-2xl font-bold mb-4">Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -287,13 +286,18 @@ function Login({ setRole }) {
             >
               Login
             </button>
+            <div style={{ marginTop: "15px" }}>
+              <p>
+                Dont have an account? <Link to="/Register">Register here</Link>
+              </p>
+            </div>
           </form>
         </div>
-        <div className="w-1/2 ">
+        <div className="w-1/2">
           <img
             src={illustration}
             alt="Illustration"
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-85"
           />
         </div>
       </div>
